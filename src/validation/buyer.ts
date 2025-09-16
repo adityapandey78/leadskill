@@ -30,8 +30,8 @@ export const buyerSchema = z.object({
   propertyType: z.enum(propertyTypeEnum),
   bhk: z.string().optional(),
   purpose: z.enum(purposeEnum),
-  budgetMin: z.string().optional(),
-  budgetMax: z.string().optional(),
+  budgetMin: z.union([z.string(), z.number()]).optional(),
+  budgetMax: z.union([z.string(), z.number()]).optional(),
   timeline: z.enum(timelineEnum),
   source: z.enum(sourceEnum),
   notes: z.string().max(1000).optional(),
@@ -56,6 +56,6 @@ export const buyerSchema = z.object({
 
 export const csvBuyerSchema = buyerSchema.transform((data) => ({
   ...data,
-  budgetMin: data.budgetMin ? parseInt(String(data.budgetMin)) : undefined,
-  budgetMax: data.budgetMax ? parseInt(String(data.budgetMax)) : undefined,
+  budgetMin: data.budgetMin ? (typeof data.budgetMin === 'string' ? parseInt(data.budgetMin) : data.budgetMin) : undefined,
+  budgetMax: data.budgetMax ? (typeof data.budgetMax === 'string' ? parseInt(data.budgetMax) : data.budgetMax) : undefined,
 }));

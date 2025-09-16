@@ -22,29 +22,16 @@ export async function POST(req: NextRequest) {
   }
   const results: { row: number; data?: unknown; errors?: string[] }[] = [];
   for (let i = 0; i < records.length; i++) {
-    const row = { ...records[i] };
-    
-    // Convert budget fields to numbers if they're strings and not empty
-    const processedRow: Record<string, string | number | undefined> = { ...row };
-    if (row.budgetMin && row.budgetMin.trim()) {
-      processedRow.budgetMin = parseInt(row.budgetMin.trim()) || undefined;
-    } else {
-      processedRow.budgetMin = undefined;
-    }
-    if (row.budgetMax && row.budgetMax.trim()) {
-      processedRow.budgetMax = parseInt(row.budgetMax.trim()) || undefined;
-    } else {
-      processedRow.budgetMax = undefined;
-    }
+    const row: Record<string, string | undefined> = { ...records[i] };
     
     // Clean up empty string fields
-    Object.keys(processedRow).forEach(key => {
-      if (processedRow[key] === '') {
-        processedRow[key] = undefined;
+    Object.keys(row).forEach(key => {
+      if (row[key] === '') {
+        row[key] = undefined;
       }
     });
     
-    const parsed = csvBuyerSchema.safeParse(processedRow);
+    const parsed = csvBuyerSchema.safeParse(row);
     if (parsed.success) {
       // Add required fields for database insert
       const buyerData = {
