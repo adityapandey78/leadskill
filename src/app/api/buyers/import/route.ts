@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit } from '@/middleware/rateLimit';
-import { db } from '../../../../drizzle/db';
-import { buyers } from '../../../../drizzle/schema';
+import { db } from '../../../../../drizzle/db';
+import { buyers } from '../../../../../drizzle/schema';
 import { csvBuyerSchema } from '@/validation/buyer';
 import { z } from 'zod';
 import { parse } from 'csv-parse/sync';
