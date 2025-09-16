@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+
+:root {
+  --background: #101014;
+  --foreground: #f4f4f5;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --border: #27272a;
+  --card: #18181b;
+  --error: #f87171;
+  --success: #4ade80;
+  --font-sans: 'Inter', Arial, Helvetica, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #101014;
+    --foreground: #f4f4f5;
+    --card: #18181b;
+    --border: #27272a;
+    --accent: #2563eb;
+    --accent-hover: #1d4ed8;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.main-bg {
+  background: linear-gradient(120deg, #18181b 60%, #23234a 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+  background-blend-mode: multiply;
+}
