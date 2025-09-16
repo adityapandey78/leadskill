@@ -31,7 +31,7 @@ export function BuyersImportForm({ onImport }: { onImport: (result: any) => void
 
   return (
     <form onSubmit={handleImport} className="flex gap-2 items-center mt-2 mb-4">
-      <input type="file" accept=".csv" ref={fileInput} className="input-dark" />
+      <input type="file" accept=".csv" ref={fileInput} className="input-dark" title="Upload CSV file" />
       <button type="submit" className="px-3 py-1 rounded bg-blue-600 text-white font-semibold" disabled={uploading}>
         {uploading ? "Importing..." : "Import CSV"}
       </button>

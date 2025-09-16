@@ -30,12 +30,12 @@ export const buyerSchema = z.object({
   propertyType: z.enum(propertyTypeEnum),
   bhk: z.string().optional(),
   purpose: z.enum(purposeEnum),
-  budgetMin: z.coerce.number().int().positive().optional(),
-  budgetMax: z.coerce.number().int().positive().optional(),
+  budgetMin: z.string().optional(),
+  budgetMax: z.string().optional(),
   timeline: z.enum(timelineEnum),
   source: z.enum(sourceEnum),
   notes: z.string().max(1000).optional(),
-  tags: z.array(z.string().max(32)).optional(),
+  tags: z.string().max(500).optional(),
   status: z.enum(statusEnum).optional(),
 }).superRefine((data, ctx) => {
   if ((data.propertyType === 'Apartment' || data.propertyType === 'Villa') && !data.bhk) {
@@ -45,7 +45,7 @@ export const buyerSchema = z.object({
       message: 'BHK required for Apartment/Villa',
     });
   }
-  if (data.budgetMax && data.budgetMin && data.budgetMax < data.budgetMin) {
+  if (data.budgetMax && data.budgetMin && Number(data.budgetMax) < Number(data.budgetMin)) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['budgetMax'],

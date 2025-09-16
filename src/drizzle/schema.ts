@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, text, integer, timestamp, json, pgEnum, pgArray } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, varchar, text, integer, timestamp, json, pgEnum } from 'drizzle-orm/pg-core';
 
 export const cityEnum = pgEnum('city', ['Chandigarh', 'Mohali', 'Zirakpur', 'Panchkula', 'Other']);
 export const propertyTypeEnum = pgEnum('propertyType', ['Apartment', 'Villa', 'Plot', 'Office', 'Retail']);
@@ -21,8 +21,8 @@ export const buyers = pgTable('buyers', {
   budgetMax: integer('budgetMax'),
   timeline: timelineEnum('timeline').notNull(),
   source: sourceEnum('source').notNull(),
-  notes: text('notes', { length: 1000 }),
-  tags: varchar('tags', { length: 32 }).array(),
+  notes: text('notes'),
+  tags: varchar('tags', { length: 500 }),
   status: statusEnum('status').notNull().default('New'),
   ownerId: uuid('ownerId').notNull(),
   updatedAt: timestamp('updatedAt', { withTimezone: true }).notNull().defaultNow(),

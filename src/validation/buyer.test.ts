@@ -31,7 +31,7 @@ describe('csvBuyerSchema', () => {
     };
     const result = csvBuyerSchema.safeParse(row);
     expect(result.success).toBe(false);
-    expect(result.error.issues.some(i => i.path.includes('budgetMax'))).toBe(true);
+    expect(result.error?.issues.some(i => i.path.includes('budgetMax'))).toBe(true);
   });
 
   it('requires BHK for Apartment/Villa', () => {
@@ -42,7 +42,7 @@ describe('csvBuyerSchema', () => {
     };
     const result = csvBuyerSchema.safeParse(row);
     expect(result.success).toBe(false);
-    expect(result.error.issues.some(i => i.path.includes('bhk'))).toBe(true);
+    expect(result.error?.issues.some(i => i.path.includes('bhk'))).toBe(true);
   });
 });
 

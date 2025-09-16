@@ -6,8 +6,6 @@ import { csvBuyerSchema } from '@/validation/buyer';
 import { z } from 'zod';
 import { parse } from 'csv-parse/sync';
 
-export const runtime = 'edge';
-
 export async function POST(req: NextRequest) {
   const limitRes = rateLimit(req);
   if (limitRes) return limitRes;

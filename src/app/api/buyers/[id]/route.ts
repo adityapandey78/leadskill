@@ -6,7 +6,8 @@ import { buyerSchema } from '@/validation/buyer';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]';
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -21,7 +22,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
   const lead = parsed.data;
   // Concurrency check
-  const existing = await db.query.buyers.findFirst({ where: eq(buyers.id, params.id) });
+  const existing = await db.query.buyers.findFirst({ where: eq(buyers.id, id) });
   if (!existing) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (data.updatedAt && new Date(data.updatedAt).getTime() !== new Date(existing.updatedAt).getTime()) {
     return NextResponse.json({ error: 'Record changed, please refresh' }, { status: 409 });
@@ -34,12 +35,27 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const bhkValue = allowedBhk.includes(lead.bhk as any)
       ? (lead.bhk as "1" | "2" | "3" | "4" | "Studio")
       : null;
+    
+    // Convert tags array to comma-separated string if needed
+    const tagsValue = Array.isArray(lead.tags) ? lead.tags.join(',') : lead.tags;
+    
+    // Convert budget strings to numbers
+    const budgetMinValue = lead.budgetMin ? Number(lead.budgetMin) : null;
+    const budgetMaxValue = lead.budgetMax ? Number(lead.budgetMax) : null;
+    
     const [updated] = await db.update(buyers)
-      .set({ ...lead, bhk: bhkValue, updatedAt: now })
-      .where(eq(buyers.id, params.id))
+      .set({ 
+        ...lead, 
+        bhk: bhkValue, 
+        tags: tagsValue, 
+        budgetMin: budgetMinValue,
+        budgetMax: budgetMaxValue,
+        updatedAt: now 
+      })
+      .where(eq(buyers.id, id))
       .returning();
     await db.insert(buyerHistory).values({
-      buyerId: params.id,
+      buyerId: id,
       changedBy: existing.ownerId,
       changedAt: now,
       diff: { updated: true, ...lead },

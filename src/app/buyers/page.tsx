@@ -1,13 +1,11 @@
-'use client';
-
 import { db } from '@/drizzle/db';
 import { buyers } from '@/drizzle/schema';
 import { eq, and, ilike, desc, or } from 'drizzle-orm';
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import Link from 'next/link';
+import { BuyersImportSection } from './BuyersImportSection';
 import { BuyersListControls } from './BuyersListControls';
-import { BuyersImportForm } from './BuyersImportForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,9 +30,10 @@ function buildFilters(searchParams: Record<string, string | string[] | undefined
   return filters.length ? and(...filters) : undefined;
 }
 
-export default async function BuyersPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
-  const page = Number(searchParams.page) || 1;
-  const filters = buildFilters(searchParams);
+export default async function BuyersPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
+  const filters = buildFilters(params);
   const query = db.select().from(buyers)
     .where(filters)
     .orderBy(desc(buyers.updatedAt))
@@ -42,11 +41,10 @@ export default async function BuyersPage({ searchParams }: { searchParams: Recor
     .offset((page - 1) * PAGE_SIZE);
   const data = await query;
 
-  // For pagination, get total count
-  // Use Drizzle's sql template for count
-  // @ts-ignore
-  const countResult: any = await db.execute(`SELECT COUNT(*)::int as count FROM buyers${filters ? ' WHERE ' + filters : ''}`);
-  const totalCount = Number(countResult?.rows?.[0]?.count || 0);
+  // Get total count for pagination
+  const countQuery = db.select().from(buyers).where(filters);
+  const allData = await countQuery;
+  const totalCount = allData.length;
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   return (
@@ -67,33 +65,6 @@ export default async function BuyersPage({ searchParams }: { searchParams: Recor
       </ErrorBoundary>
     </main>
   );
-
-function BuyersImportSection() {
-  const [result, setResult] = useState<any>(null);
-  return (
-    <div className="mb-4">
-      <BuyersImportForm onImport={setResult} />
-      {result && (
-        <div className="mt-2">
-          <div className="text-sm text-green-400 mb-1">Imported: {result.imported} / {result.total}</div>
-          {result.errors?.length > 0 && (
-            <table className="text-xs bg-neutral-900 border border-neutral-800 rounded w-full">
-              <thead><tr><th className="px-2 py-1">Row</th><th className="px-2 py-1">Errors</th></tr></thead>
-              <tbody>
-                {result.errors.map((e: any, i: number) => (
-                  <tr key={i} className="border-t border-neutral-800">
-                    <td className="px-2 py-1">{e.row}</td>
-                    <td className="px-2 py-1 text-red-400">{e.errors?.join(', ')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 }
 
 function Pagination({ page, totalPages }: { page: number, totalPages: number }) {

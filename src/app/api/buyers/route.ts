@@ -31,7 +31,9 @@ export async function POST(req: NextRequest) {
     const [created] = await db.insert(buyers).values({
       ...lead,
       bhk: bhkValue,
-      tags: Array.isArray(lead.tags) ? lead.tags : [],
+      tags: Array.isArray(lead.tags) ? lead.tags.join(',') : lead.tags,
+      budgetMin: lead.budgetMin ? Number(lead.budgetMin) : null,
+      budgetMax: lead.budgetMax ? Number(lead.budgetMax) : null,
       ownerId,
       updatedAt: now,
     }).returning();
