@@ -13,9 +13,38 @@ const timelineOptions = ["0-3m", "3-6m", ">6m", "Exploring"];
 const sourceOptions = ["Website", "Referral", "Walk-in", "Call", "Other"];
 const statusOptions = ["New", "Qualified", "Contacted", "Visited", "Negotiation", "Converted", "Dropped"];
 
-type FormData = z.infer<typeof buyerSchema> & { updatedAt: string };
+// Types based on database schema
+interface Buyer {
+  id: string;
+  fullName: string;
+  email?: string | null;
+  phone: string;
+  city: string;
+  propertyType: string;
+  bhk?: string | null;
+  purpose: string;
+  budgetMin?: number | null;
+  budgetMax?: number | null;
+  timeline: string;
+  source: string;
+  notes?: string | null;
+  tags?: string | null;
+  status: string;
+  ownerId: string;
+  updatedAt: string;
+}
 
-export function BuyerEditForm({ buyer, history }: { buyer: any, history: any[] }) {
+interface HistoryEntry {
+  id: string;
+  buyerId: string;
+  changedBy: string;
+  changedAt: string;
+  diff: Record<string, unknown>;
+}
+
+type FormData = z.infer<typeof buyerSchema>;
+
+export function BuyerEditForm({ buyer, history }: { buyer: Buyer, history: HistoryEntry[] }) {
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -26,17 +55,27 @@ export function BuyerEditForm({ buyer, history }: { buyer: any, history: any[] }
     formState: { errors },
     reset,
   } = useForm<FormData>({
-    resolver: zodResolver(buyerSchema) as any, // Type workaround for Zod resolver
+    resolver: zodResolver(buyerSchema),
     defaultValues: {
-      ...buyer,
-      tags: buyer.tags?.join(", ") ?? "",
-      updatedAt: buyer.updatedAt,
+      fullName: buyer.fullName,
+      phone: buyer.phone,
+      email: buyer.email || "",
+      city: buyer.city as "Chandigarh" | "Mohali" | "Zirakpur" | "Panchkula" | "Other",
+      propertyType: buyer.propertyType as "Apartment" | "Villa" | "Plot" | "Office" | "Retail",
+      bhk: buyer.bhk || "",
+      purpose: buyer.purpose as "Buy" | "Rent",
+      budgetMin: buyer.budgetMin?.toString() || "",
+      budgetMax: buyer.budgetMax?.toString() || "",
+      timeline: buyer.timeline as "0-3m" | "3-6m" | ">6m" | "Exploring",
+      source: buyer.source as "Website" | "Referral" | "Walk-in" | "Call" | "Other",
+      notes: buyer.notes || "",
+      tags: typeof buyer.tags === 'string' ? buyer.tags : "",
     },
     mode: "onTouched",
   });
   const propertyType = watch("propertyType");
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: z.infer<typeof buyerSchema>) => {
     setSubmitting(true);
     setServerError(null);
     setSuccess(false);
@@ -48,13 +87,15 @@ export function BuyerEditForm({ buyer, history }: { buyer: any, history: any[] }
       });
       if (res.ok) {
         setSuccess(true);
-        reset({ ...data, updatedAt: new Date().toISOString() });
+        reset(data);
+        setTimeout(() => setSuccess(false), 3000);
       } else {
         const err = await res.json();
         setServerError(err.error || "Unknown error");
       }
-    } catch (e: any) {
-      setServerError(e.message || "Unknown error");
+    } catch (e: unknown) {
+      console.error('Update error:', e);
+      setServerError(e instanceof Error ? e.message : "Unknown error occurred");
     } finally {
       setSubmitting(false);
     }
@@ -65,7 +106,6 @@ export function BuyerEditForm({ buyer, history }: { buyer: any, history: any[] }
       <div className="max-w-2xl mx-auto bg-neutral-900 rounded-xl shadow-lg p-8 border border-neutral-800">
         <h1 className="text-2xl font-bold mb-4">Edit Buyer</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" aria-label="Edit Buyer Lead">
-          <input type="hidden" {...register("updatedAt")} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block mb-1 font-medium" htmlFor="fullName">Full Name *</label>

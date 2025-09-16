@@ -36,7 +36,8 @@ export default function LoginPage() {
       } else if (result?.ok) {
         router.push('/buyers');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Login error:', err);
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);
@@ -56,7 +57,8 @@ export default function LoginPage() {
       if (result?.ok) {
         router.push('/buyers');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Demo login error:', err);
       setError('Demo login failed. Please try again.');
     } finally {
       setIsLoading(false);
