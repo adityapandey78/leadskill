@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '../../../../../drizzle/db';
-import { buyers, buyerHistory } from '../../../../../drizzle/schema';
+import { db } from '@/drizzle/db';
+import { buyers, buyerHistory } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { buyerSchema } from '@/validation/buyer';
 import { getServerSession } from 'next-auth';

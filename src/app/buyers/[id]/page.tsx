@@ -1,5 +1,5 @@
-import { db } from '../../../../drizzle/db';
-import { buyers, buyerHistory } from '../../../../drizzle/schema';
+import { db } from '@/drizzle/db';
+import { buyers, buyerHistory } from '@/drizzle/schema';
 import { eq, desc } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { z } from 'zod';

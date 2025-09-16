@@ -1,5 +1,7 @@
-import { db } from '../../../drizzle/db';
-import { buyers } from '../../../drizzle/schema';
+'use client';
+
+import { db } from '@/drizzle/db';
+import { buyers } from '@/drizzle/schema';
 import { eq, and, ilike, desc, or } from 'drizzle-orm';
 import { Suspense, useState } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';

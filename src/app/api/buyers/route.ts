@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
 import { buyerSchema } from '@/validation/buyer';
-import { db } from '../../../../drizzle/db';
-import { buyers, buyerHistory } from '../../../../drizzle/schema';
+import { db } from '@/drizzle/db';
+import { buyers, buyerHistory } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 

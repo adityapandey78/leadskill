@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '../../../../../drizzle/db';
-import { buyers } from '../../../../../drizzle/schema';
+import { db } from '@/drizzle/db';
+import { buyers } from '@/drizzle/schema';
 import { eq, and, ilike, or, desc } from 'drizzle-orm';
 
 function buildFilters(searchParams: Record<string, string | string[] | undefined>) {
