@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import { buyerSchema } from '@/validation/buyer';
 import { db } from '@/drizzle/db';
 import { buyers, buyerHistory } from '@/drizzle/schema';
-import { eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(req: NextRequest) {
@@ -25,7 +24,7 @@ export async function POST(req: NextRequest) {
   const now = new Date();
   try {
     const allowedBhk = ["1", "2", "3", "4", "Studio"];
-    const bhkValue = allowedBhk.includes(lead.bhk as any)
+    const bhkValue = allowedBhk.includes(lead.bhk as string)
       ? (lead.bhk as "1" | "2" | "3" | "4" | "Studio")
       : null;
     const [created] = await db.insert(buyers).values({
@@ -44,7 +43,8 @@ export async function POST(req: NextRequest) {
       diff: { created: true, ...lead },
     });
     return NextResponse.json({ success: true, buyer: created });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || 'Failed to create lead' }, { status: 500 });
+  } catch (e: unknown) {
+    console.error('Create buyer error:', e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Failed to create lead' }, { status: 500 });
   }
 }

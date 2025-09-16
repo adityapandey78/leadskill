@@ -4,7 +4,7 @@ import { buyers, buyerHistory } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { buyerSchema } from '@/validation/buyer';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
