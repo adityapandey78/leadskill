@@ -54,6 +54,8 @@ export const buyerSchema = z.object({
   }
 });
 
-export const csvBuyerSchema = buyerSchema.safeExtend({
-  status: z.enum(statusEnum).optional(),
-});
+export const csvBuyerSchema = buyerSchema.transform((data) => ({
+  ...data,
+  budgetMin: data.budgetMin ? parseInt(String(data.budgetMin)) : undefined,
+  budgetMax: data.budgetMax ? parseInt(String(data.budgetMax)) : undefined,
+}));

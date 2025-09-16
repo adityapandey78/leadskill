@@ -1,0 +1,7 @@
+fullName,email,phone,city,propertyType,bhk,purpose,budgetMin,budgetMax,timeline,source,notes,tags,status
+Valid Lead,valid@email.com,9876543210,Chandigarh,Apartment,2,Buy,5000000,7000000,0-3m,Website,"This should work fine",Valid,New
+Invalid BHK Missing,missing@email.com,9876543210,Chandigarh,Apartment,,Buy,5000000,7000000,0-3m,Website,"Missing BHK for apartment",Error,New
+Invalid Budget Order,budget@email.com,9876543210,Mohali,Villa,3,Buy,9000000,7000000,0-3m,Website,"Budget max < min",Error,New
+Invalid Phone Short,phone@email.com,123,Zirakpur,Plot,,Buy,2000000,3000000,0-3m,Website,"Phone too short",Error,New
+Invalid City,city@email.com,9876543210,InvalidCity,Office,,Buy,3000000,5000000,0-3m,Website,"Invalid city name",Error,New
+,empty@email.com,9876543210,Panchkula,Retail,,Buy,4000000,6000000,0-3m,Website,"Empty full name",Error,New
