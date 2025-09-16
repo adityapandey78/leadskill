@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { buyerSchema } from "@/validation/buyer";
 import { z } from "zod";
 
@@ -18,6 +19,7 @@ const sourceOptions = ["Website", "Referral", "Walk-in", "Call", "Other"];
 export default function NewBuyerForm() {
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -30,17 +32,28 @@ export default function NewBuyerForm() {
 
   const propertyType = watch("propertyType");
 
-  // Helper function to get aria-invalid value
-  const getAriaInvalid = (hasError: boolean) => hasError ? "true" : "false";
-
   const onSubmit = async (data: FormData) => {
     setSubmitting(true);
     setServerError(null);
     try {
-      // TODO: call API to create buyer
-      alert("Lead created! (API integration pending)");
-    } catch (e: any) {
-      setServerError(e.message || "Unknown error");
+      const response = await fetch('/api/buyers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Success - redirect to the buyers list
+        router.push('/buyers');
+      } else {
+        setServerError(result.error || 'Failed to create lead');
+      }
+    } catch (e: unknown) {
+      setServerError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setSubmitting(false);
     }
@@ -58,25 +71,25 @@ export default function NewBuyerForm() {
           <div>
             <label className="block mb-1 font-medium" htmlFor="fullName">Full Name *</label>
             <input {...register("fullName")}
-              className="input-dark" id="fullName" autoFocus aria-invalid={getAriaInvalid(!!errors.fullName)} />
+              className="input-dark" id="fullName" autoFocus />
             {errors.fullName && <span className="form-error">{errors.fullName.message}</span>}
           </div>
           <div>
             <label className="block mb-1 font-medium" htmlFor="phone">Phone *</label>
             <input {...register("phone")}
-              className="input-dark" id="phone" aria-invalid={getAriaInvalid(!!errors.phone)} />
+              className="input-dark" id="phone" />
             {errors.phone && <span className="form-error">{errors.phone.message}</span>}
           </div>
           <div>
             <label className="block mb-1 font-medium" htmlFor="email">Email</label>
             <input {...register("email")}
-              className="input-dark" id="email" aria-invalid={getAriaInvalid(!!errors.email)} />
+              className="input-dark" id="email" />
             {errors.email && <span className="form-error">{errors.email.message}</span>}
           </div>
           <div>
             <label className="block mb-1 font-medium" htmlFor="city">City *</label>
             <select {...register("city")}
-              className="input-dark" id="city" aria-invalid={getAriaInvalid(!!errors.city)}>
+              className="input-dark" id="city">
               <option value="">Select</option>
               {cityOptions.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -85,7 +98,7 @@ export default function NewBuyerForm() {
           <div>
             <label className="block mb-1 font-medium" htmlFor="propertyType">Property Type *</label>
             <select {...register("propertyType")}
-              className="input-dark" id="propertyType" aria-invalid={getAriaInvalid(!!errors.propertyType)}>
+              className="input-dark" id="propertyType">
               <option value="">Select</option>
               {propertyTypeOptions.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
@@ -95,7 +108,7 @@ export default function NewBuyerForm() {
             <div>
               <label className="block mb-1 font-medium" htmlFor="bhk">BHK *</label>
               <select {...register("bhk")}
-                className="input-dark" id="bhk" aria-invalid={getAriaInvalid(!!errors.bhk)}>
+                className="input-dark" id="bhk">
                 <option value="">Select</option>
                 {bhkOptions.map((b) => <option key={b} value={b}>{b}</option>)}
               </select>
@@ -105,7 +118,7 @@ export default function NewBuyerForm() {
           <div>
             <label className="block mb-1 font-medium" htmlFor="purpose">Purpose *</label>
             <select {...register("purpose")}
-              className="input-dark" id="purpose" aria-invalid={getAriaInvalid(!!errors.purpose)}>
+              className="input-dark" id="purpose">
               <option value="">Select</option>
               {purposeOptions.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
@@ -114,19 +127,19 @@ export default function NewBuyerForm() {
           <div>
             <label className="block mb-1 font-medium" htmlFor="budgetMin">Budget Min (INR)</label>
             <input type="number" {...register("budgetMin")}
-              className="input-dark" id="budgetMin" aria-invalid={getAriaInvalid(!!errors.budgetMin)} />
+              className="input-dark" id="budgetMin" />
             {errors.budgetMin && <span className="form-error">{errors.budgetMin.message}</span>}
           </div>
           <div>
             <label className="block mb-1 font-medium" htmlFor="budgetMax">Budget Max (INR)</label>
             <input type="number" {...register("budgetMax")}
-              className="input-dark" id="budgetMax" aria-invalid={getAriaInvalid(!!errors.budgetMax)} />
+              className="input-dark" id="budgetMax" />
             {errors.budgetMax && <span className="form-error">{errors.budgetMax.message}</span>}
           </div>
           <div>
             <label className="block mb-1 font-medium" htmlFor="timeline">Timeline *</label>
             <select {...register("timeline")}
-              className="input-dark" id="timeline" aria-invalid={getAriaInvalid(!!errors.timeline)}>
+              className="input-dark" id="timeline">
               <option value="">Select</option>
               {timelineOptions.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -135,7 +148,7 @@ export default function NewBuyerForm() {
           <div>
             <label className="block mb-1 font-medium" htmlFor="source">Source *</label>
             <select {...register("source")}
-              className="input-dark" id="source" aria-invalid={getAriaInvalid(!!errors.source)}>
+              className="input-dark" id="source">
               <option value="">Select</option>
               {sourceOptions.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
@@ -144,13 +157,13 @@ export default function NewBuyerForm() {
           <div className="md:col-span-2">
             <label className="block mb-1 font-medium" htmlFor="notes">Notes</label>
             <textarea {...register("notes")}
-              className="input-dark" id="notes" rows={2} aria-invalid={getAriaInvalid(!!errors.notes)} />
+              className="input-dark" id="notes" rows={2} />
             {errors.notes && <span className="form-error">{errors.notes.message}</span>}
           </div>
           <div className="md:col-span-2">
             <label className="block mb-1 font-medium" htmlFor="tags">Tags (comma separated)</label>
             <input {...register("tags")}
-              className="input-dark" id="tags" aria-invalid={getAriaInvalid(!!errors.tags)} placeholder="e.g. NRI,Investor" />
+              className="input-dark" id="tags" placeholder="e.g. NRI,Investor" />
             {errors.tags && <span className="form-error">{errors.tags.message}</span>}
           </div>
         </div>
