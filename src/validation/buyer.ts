@@ -58,4 +58,6 @@ export const csvBuyerSchema = buyerSchema.transform((data) => ({
   ...data,
   budgetMin: data.budgetMin ? (typeof data.budgetMin === 'string' ? parseInt(data.budgetMin) : data.budgetMin) : undefined,
   budgetMax: data.budgetMax ? (typeof data.budgetMax === 'string' ? parseInt(data.budgetMax) : data.budgetMax) : undefined,
+  // Keep tags as simple string, not array - database schema expects varchar
+  tags: typeof data.tags === 'string' ? data.tags : undefined,
 }));
