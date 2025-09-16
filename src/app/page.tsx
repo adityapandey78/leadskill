@@ -27,12 +27,20 @@ export default async function Home() {
                   </Link>
                 </>
               ) : (
-                <Link 
-                  href="/login"
-                  className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Sign In
-                </Link>
+                <>
+                  <Link 
+                    href="/login"
+                    className="px-4 py-2 text-sm font-medium text-neutral-300 hover:text-white border border-neutral-600 rounded-lg hover:border-neutral-500 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    href="/signup"
+                    className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </>
               )}
             </div>
           </div>

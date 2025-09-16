@@ -5,6 +5,7 @@ import { db } from '@/drizzle/db';
 
 export const authOptions = {
   adapter: DrizzleAdapter(db),
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Demo Login',
