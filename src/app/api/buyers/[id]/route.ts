@@ -18,7 +18,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     tags: typeof data.tags === 'string' ? data.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : data.tags,
   });
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    const errorMessages = parsed.error.issues.map(issue => 
+      `${issue.path.join('.')}: ${issue.message}`
+    ).join(', ');
+    return NextResponse.json({ error: errorMessages }, { status: 400 });
   }
   const lead = parsed.data;
   // Concurrency check
@@ -32,7 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const now = new Date();
   try {
     const allowedBhk = ["1", "2", "3", "4", "Studio"];
-    const bhkValue = allowedBhk.includes(lead.bhk as any)
+    const bhkValue = allowedBhk.includes(lead.bhk as string)
       ? (lead.bhk as "1" | "2" | "3" | "4" | "Studio")
       : null;
     
@@ -61,7 +64,8 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       diff: { updated: true, ...lead },
     });
     return NextResponse.json({ success: true, buyer: updated });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message || 'Failed to update lead' }, { status: 500 });
+  } catch (e: unknown) {
+    console.error('Update buyer error:', e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Failed to update buyer' }, { status: 500 });
   }
 }

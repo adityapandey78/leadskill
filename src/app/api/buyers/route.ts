@@ -17,7 +17,10 @@ export async function POST(req: NextRequest) {
     tags: typeof data.tags === 'string' ? data.tags.split(',').map((t: string) => t.trim()).filter(Boolean) : data.tags,
   });
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    const errorMessages = parsed.error.issues.map(issue => 
+      `${issue.path.join('.')}: ${issue.message}`
+    ).join(', ');
+    return NextResponse.json({ error: errorMessages }, { status: 400 });
   }
   const lead = parsed.data;
   const ownerId = uuidv4(); // TODO: Replace with real user id from session

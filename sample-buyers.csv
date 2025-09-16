@@ -1,0 +1,16 @@
+fullName,email,phone,city,propertyType,bhk,purpose,budgetMin,budgetMax,timeline,source,notes,tags,status
+Rajesh Kumar,rajesh@gmail.com,9876543210,Chandigarh,Apartment,2,Buy,5000000,7000000,0-3m,Website,"Looking for 2BHK near IT park",NRI;Urgent,New
+Priya Sharma,priya.sharma@outlook.com,9988776655,Mohali,Villa,3,Buy,8000000,12000000,3-6m,Referral,"Prefers gated community with good schools nearby",Family;Premium,Qualified
+Amit Singh,,9123456789,Zirakpur,Plot,,Buy,2000000,3000000,>6m,Walk-in,"Investment purpose plot in upcoming area",Investor,New
+Neha Gupta,neha.gupta@yahoo.com,8765432109,Panchkula,Office,,Rent,50000,80000,0-3m,Call,"Startup looking for 2000 sq ft office space",Commercial;Startup,Contacted
+Sandeep Agarwal,sandeep@email.com,7654321098,Chandigarh,Apartment,1,Rent,15000,25000,0-3m,Website,"Bachelor accommodation near Sector 17",Bachelor;Budget,New
+Kavita Mehta,kavita.mehta@gmail.com,9234567890,Other,Retail,,Buy,3000000,5000000,3-6m,Other,"Looking for shop in busy market area",Business;Retail,Qualified
+Rohit Verma,rohit.v@company.com,8901234567,Mohali,Apartment,3,Buy,6000000,9000000,0-3m,Referral,"IT professional seeking 3BHK with parking",IT;Professional,Visited
+Sunita Devi,,9345678901,Chandigarh,Villa,4,Buy,15000000,20000000,>6m,Website,"Large family home with garden and servant quarter",Luxury;Family,Exploring
+Vikash Jindal,vikash@business.in,8012345678,Zirakpur,Plot,,Buy,1500000,2500000,3-6m,Call,"Agricultural land for farming business",Agriculture;Investment,New
+Ritu Batra,ritu.batra@email.com,7890123456,Panchkula,Apartment,2,Rent,20000,30000,0-3m,Website,"Working professional seeking furnished apartment",Professional;Furnished,Contacted
+Manish Kapoor,manish.kapoor@tech.com,9567890123,Chandigarh,Office,,Rent,80000,120000,0-3m,Referral,"Tech company expanding team needs larger office",Technology;Expansion,Negotiation
+Pooja Anand,,8678901234,Mohali,Apartment,Studio,Buy,2500000,3500000,0-3m,Walk-in,"First time buyer looking for studio apartment",FirstTime;Student,New
+Deepak Malhotra,deepak@construction.com,7567890123,Other,Plot,,Buy,5000000,8000000,>6m,Other,"Construction businessman looking for development land",Construction;Developer,Qualified
+Rekha Sood,rekha.sood@email.com,9678901234,Chandigarh,Villa,3,Rent,40000,60000,3-6m,Website,"Transferring executive needs temporary villa rental",Executive;Transfer,Contacted
+Ajay Gupta,ajay.gupta@finance.com,8567890123,Panchkula,Retail,,Buy,4000000,6000000,0-3m,Call,"Financial advisor setting up new branch office",Finance;Branch,Visited
